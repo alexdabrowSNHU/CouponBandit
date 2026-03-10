@@ -25,7 +25,7 @@
                 <a href="{{ route('deals.index') }}" class="hover:text-zinc-900 transition">Deals</a>
                 <a href="{{ route('categories.index') }}" class="hover:text-zinc-900 transition">Categories</a>
                 <a href="{{ route('merchants.index') }}" class="hover:text-zinc-900 transition">Stores</a>
-                <a href="#" class="hover:text-zinc-900 transition">My Rewards</a>
+                <a href="{{ route('my_rewards.index') }}" class="hover:text-zinc-900 transition">My Rewards</a>
             </nav>
 
             <!-- Desktop Right -->
@@ -65,7 +65,7 @@
                 <a href="{{ route('deals.index') }}" class="block hover:text-zinc-900">Deals</a>
                 <a href="{{ route('categories.index') }}" class="block hover:text-zinc-900">Categories</a>
                 <a href="{{ route('merchants.index') }}" class="block hover:text-zinc-900">Stores</a>
-                <a href="#" class="block hover:text-zinc-900">My Rewards</a>
+                <a href="{{ route('my_rewards.index') }}" class="block hover:text-zinc-900">My Rewards</a>
 
                 <div class="pt-4 border-t border-zinc-200 space-y-5">
                     @auth

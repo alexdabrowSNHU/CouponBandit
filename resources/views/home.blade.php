@@ -49,30 +49,18 @@
             @else
                 <div class="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($deals as $deal)
-                        @php
-                            $brandColor = $deal->merchant->brand_color ?? '#4f46e5';
-                        @endphp
-
-                        <a href="{{ $deal->deal_url }}" target="_blank" rel="noopener noreferrer"
-                            class="group flex h-full min-h-[208px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-200 hover:border-zinc-300 hover:shadow-md">
-
-                            <div class="flex h-20 items-center justify-center border-b border-zinc-200 px-4"
-                                style="background-color: {{ $brandColor }};">
-                                <div class="flex h-11 w-full max-w-[160px] items-center justify-center rounded-md bg-white/90 px-3 ring-1 ring-black/5">
-                                    <img src="{{ $deal->merchant->logo_url }}" alt="{{ $deal->merchant_name }}" class="h-7 w-full object-contain" loading="lazy">
-                                </div>
-                            </div>
-
-                            <div class="flex flex-1 flex-col p-4">
-                                <span class="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-500">{{ $deal->merchant_name }}</span>
-                                <h3 class="mt-1 min-h-[48px] text-xl font-semibold leading-tight text-zinc-900">
-                                    {{ \Illuminate\Support\Str::limit($deal->title, 52) }}
-                                </h3>
-                                <p class="mt-2 text-sm leading-snug text-zinc-600">
-                                    {{ \Illuminate\Support\Str::limit(rtrim($deal->description, '.'), 74) }}
-                                </p>
-                            </div>
-                        </a>
+                        <x-deal-card
+                            :deal-url="$deal->deal_url"
+                            :brand-color="$deal->merchant->brand_color ?? '#4f46e5'"
+                            :logo-url="$deal->merchant->logo_url"
+                            :merchant-name="$deal->merchant_name"
+                            :title="$deal->title"
+                            :description="$deal->description"
+                            :show-favorite="auth()->check()"
+                            :favorite-route="route('favorites.toggle', $deal->id)"
+                            :is-favorited="auth()->check() ? auth()->user()->favoritedDeals->contains($deal->id) : false"
+                            :link-whole-card="false"
+                        />
                     @endforeach
                 </div>
             @endif

@@ -46,7 +46,7 @@
                         <span class="block text-zinc-600">Log in and pick up where you left off.</span>
                     </p>
                     <p class="mt-6 max-w-sm text-base text-zinc-700">
-                        Daily drops. Verified codes. A better way to save.
+                        Built with Laravel.
                     </p>
                 </div>
             </section>
@@ -56,6 +56,12 @@
                     <h1 class="text-3xl font-semibold tracking-tight">Welcome back</h1>
                     <p class="mt-2 text-zinc-600">Sign in to access your saved stores and rewards.</p>
                     <p class="mt-2 text-zinc-600">This is a dummy site strictly for demoing purposes.</p>
+
+                    @if (session('error'))
+                        <div class="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
+                            {{ session('error') }}
+                        </div>
+                    @endif
 
                     @if ($errors->any())
                         <div class="mt-6 rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700">
@@ -93,6 +99,14 @@
                         <button type="submit"
                             class="w-full rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800">
                             Sign in
+                        </button>
+                    </form>
+
+                    <form action="{{ route('login.demo') }}" method="POST" class="mt-3">
+                        @csrf
+                        <button type="submit"
+                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50">
+                            Continue as Demo User
                         </button>
                     </form>
 

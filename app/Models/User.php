@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function favoritedDeals(){
+
+        return $this->belongsToMany(Deal::class, 'deal_user')->withTimestamps();
+
+    }
 }
