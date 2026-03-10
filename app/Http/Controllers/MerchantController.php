@@ -12,11 +12,11 @@ class MerchantController extends Controller
     }
 
     public function show(int $id){
-        
+
         $merchant = Merchant::find($id);
 
         if(!$merchant){
-            return redirect()->route('stores.index')->with('error',"Store doesn't exist");
+            return redirect()->route('merchants.index')->with('error',"Store doesn't exist");
         }
 
 

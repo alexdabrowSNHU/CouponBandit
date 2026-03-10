@@ -9,6 +9,9 @@ class CouponBanditController extends Controller
 {
     public function index(Request $request)
     {
+
+        // This query is 100% vibe coded
+        // but it should work fine for basic search functionality for now.
         $search = trim((string) $request->query('q', ''));
 
         $dealsQuery = Deal::query()
