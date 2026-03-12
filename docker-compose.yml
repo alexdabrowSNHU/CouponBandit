@@ -47,6 +47,17 @@ services:
     command: sh -lc "npm ci && npm run build"
     profiles: ["assets"]
 
+  vite:
+    image: node:22-alpine
+    container_name: couponbandit-vite
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "5173:5173"
+    command: sh -lc "npm ci && npm run dev:docker"
+    profiles: ["dev"]
+
   db:
     image: postgres:16
     container_name: couponbandit-db
