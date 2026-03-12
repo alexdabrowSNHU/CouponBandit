@@ -36,8 +36,8 @@
 <body class="h-full login-bg text-zinc-900 antialiased">
     <main class="min-h-screen px-4 py-6 sm:px-6 sm:py-10">
         <div class="mx-auto grid w-full max-w-4xl overflow-hidden rounded-3xl border border-zinc-300 bg-white shadow-xl md:grid-cols-2">
-            <section class="mcm-panel relative min-h-[220px] overflow-hidden p-8 sm:p-10 lg:min-h-[620px]">
-                <div class="relative z-10">
+            <section class="mcm-panel relative flex min-h-[220px] flex-col overflow-hidden p-8 sm:p-10 self-stretch">
+                <div class="relative z-10 flex flex-1 flex-col">
                     <a href="{{ route('login') }}" class="inline-flex items-center text-xl font-semibold tracking-tight">
                         Coupon<span class="text-indigo-600">Bandit</span>
                     </a>
@@ -45,17 +45,30 @@
                         Deals with style.
                         <span class="block text-zinc-600">Log in and pick up where you left off.</span>
                     </p>
-                    <p class="mt-6 max-w-sm text-base text-zinc-700">
-                        Built with Laravel.
-                    </p>
+                    <div class="flex-1"></div>
+                    <div class="flex flex-col justify-end">
+                        <p class="max-w-sm text-base text-zinc-700">
+                            Built with Laravel.
+                        </p>
+                        <button
+                            type="button"
+                            id="devLogToggle"
+                            aria-controls="devLogPanel"
+                            aria-expanded="false"
+                            class="mt-2 inline-flex items-center gap-1 whitespace-nowrap text-xs font-medium text-zinc-500 transition hover:text-zinc-700 focus:outline-none focus-visible:text-zinc-800 focus-visible:underline">
+                            <span id="devLogToggleLabel" class="whitespace-nowrap">Show dev log</span>
+                            <svg id="devLogChevron" class="h-3 w-3 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.51a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </section>
 
-            <section class="mcm-card flex items-center p-6 sm:p-8 lg:p-10">
+            <section class="mcm-card flex flex-col justify-center p-6 sm:p-8 lg:p-10">
                 <div class="w-full max-w-md">
                     <h1 class="text-3xl font-semibold tracking-tight">Welcome back</h1>
                     <p class="mt-2 text-zinc-600">Sign in to access your saved stores and rewards.</p>
-                    <p class="mt-2 text-zinc-600">This is a dummy site strictly for demoing purposes.</p>
 
                     @if (session('error'))
                         <div class="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
@@ -117,6 +130,55 @@
                 </div>
             </section>
         </div>
+
+         <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-4">
+            This is a dummy site strictly for demoing purposes.
+         </div>
+        <section id="devLogPanel" class="mx-auto mt-4 hidden w-full max-w-4xl overflow-hidden rounded-2xl border border-zinc-300 bg-white/80 shadow-sm" hidden>
+            <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3 sm:px-6">
+                <h2 class="text-sm font-semibold tracking-wide text-zinc-900">Development Log</h2>
+            </div>
+            <div class="px-4 py-4 sm:px-6">
+                <ul class="space-y-3 text-sm text-zinc-700">
+                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span>Added 419 redirect flow to login page for expired sessions.</span>
+                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    </li>
+                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span>Removed hardcoded password defaults from compose config.</span>
+                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    </li>
+                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span>Added "My Rewards" page.</span>
+                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggle = document.getElementById('devLogToggle');
+            var panel = document.getElementById('devLogPanel');
+            var label = document.getElementById('devLogToggleLabel');
+            var chevron = document.getElementById('devLogChevron');
+
+            if (!toggle || !panel || !label || !chevron) {
+                return;
+            }
+
+            toggle.addEventListener('click', function () {
+                var expanded = toggle.getAttribute('aria-expanded') === 'true';
+                var nextExpanded = !expanded;
+
+                toggle.setAttribute('aria-expanded', String(nextExpanded));
+                panel.hidden = !nextExpanded;
+                panel.classList.toggle('hidden', !nextExpanded);
+                label.textContent = nextExpanded ? 'Hide dev log' : 'Show dev log';
+                chevron.classList.toggle('rotate-180', nextExpanded);
+            });
+        });
+    </script>
 </body>
 </html>
