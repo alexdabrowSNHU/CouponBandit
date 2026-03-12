@@ -19,7 +19,7 @@ services:
       DB_PORT: ${DB_PORT_DOCKER:-5432}
       DB_DATABASE: ${DB_DATABASE_DOCKER:-couponbandit}
       DB_USERNAME: ${DB_USERNAME_DOCKER:-app}
-      DB_PASSWORD: ${DB_PASSWORD_DOCKER:-REDACTED}
+      DB_PASSWORD: ${DB_PASSWORD_DOCKER}
     expose:
       - "9000"
     depends_on:
@@ -65,7 +65,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USERNAME_DOCKER:-app}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_DOCKER:-REDACTED}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_DOCKER}
       POSTGRES_DB: ${DB_DATABASE_DOCKER:-couponbandit}
     volumes:
       - couponbandit_pgdata:/var/lib/postgresql/data

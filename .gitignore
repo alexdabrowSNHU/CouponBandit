@@ -25,3 +25,9 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 database/seeders/DatabaseSeeder.backup.php
+database/seeders/DatabaseSeeder.backup*.php
+*.bak
+*.tmp
+docker-compose.override.yml
+.env.local
+.env.docker.local
