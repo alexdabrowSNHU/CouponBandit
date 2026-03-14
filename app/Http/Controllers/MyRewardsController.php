@@ -12,10 +12,4 @@ class MyRewardsController extends Controller {
 
     }
 
-    public function test(){
-
-        return view('my_rewards.test', []);
-
-    }
-
 };

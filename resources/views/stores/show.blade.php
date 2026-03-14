@@ -13,6 +13,30 @@
             width: 100%;
         }
 
+        /* Hide the top header strip/logo block rendered by x-deal-card. */
+        .no-strip-cards .group > :first-child {
+            display: none;
+        }
+
+        /* Compact card density once the top strip is removed. */
+        .no-strip-cards .group {
+            min-height: 0 !important;
+        }
+
+        .no-strip-cards .group > .flex {
+            padding: 0.875rem 1rem;
+        }
+
+        .no-strip-cards .group h3 {
+            min-height: 0 !important;
+            margin-top: 0.2rem;
+            line-height: 1.25;
+        }
+
+        .no-strip-cards .group p {
+            margin-top: 0.5rem;
+        }
+
         .store-deals-column {
             margin-top: 0;
         }
@@ -59,9 +83,20 @@
             <div class="relative">
                 <div class="absolute store-hero-logo">
                     <div
-                        class="w-40 h-40 rounded-full bg-zinc-900 border-4 border-white shadow-xl flex items-center justify-center overflow-hidden">
-                        @if($merchant->logo_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($merchant->logo_url))
-                            <img src="{{ asset('storage/' . $merchant->logo_url) }}" alt="{{ $merchant->name }}"
+                        class="w-40 h-40 rounded-full border-4 border-white shadow-xl flex items-center justify-center overflow-hidden"
+                        style="background-color: {{ $merchant->brand_color ?? '#4f46e5' }};">
+                        @php
+                            $rawLogo = $merchant->getRawOriginal('logo_url') ?: $merchant->logo_url;
+                            $logoPath = ltrim((string) $rawLogo, '/');
+                            $logoPath = preg_replace('#^storage/#', '', $logoPath);
+
+                            if ($logoPath !== '' && !str_starts_with($logoPath, 'merchant_logos/')) {
+                                $logoPath = 'merchant_logos/' . $logoPath;
+                            }
+                        @endphp
+
+                        @if($logoPath !== '' && \Illuminate\Support\Facades\Storage::disk('public')->exists($logoPath))
+                            <img src="{{ asset('storage/' . $logoPath) }}" alt="{{ $merchant->name }}"
                                 class="w-full h-full object-contain object-[center_50%] p-4">
                         @else
                             <span class="text-white text-4xl font-bold">{{ substr($merchant->name, 0, 1) }}</span>
@@ -75,20 +110,29 @@
                         {{ $merchant->name }} Promo Codes & Coupons
                     </h1>
                     <p class="text-center text-zinc-600 mt-2 text-sm">50 VERIFIED OFFERS ON
-                        {{ strtoupper(now()->format('F jS, Y')) }}</p>
+                        {{ strtoupper(now()->format('F jS, Y')) }}
+                    </p>
                 </div>
             </div>
 
             {{-- Main content - flex instead of grid --}}
             <div class="store-main-content-spacing store-main-content-layout flex gap-6 items-start">
                 {{-- Left column - sticky sidebar --}}
-                <aside class="store-main-sidebar space-y-6 flex-shrink-0">
+                <aside class="store-main-sidebar no-strip-cards space-y-6 flex-shrink-0">
                     <div class="rounded-2xl border border-zinc-200 bg-white p-5">
                         <h2 class="font-bold text-lg mb-4">Today's Top {{ $merchant->name }} Offers:</h2>
-                        <ul class="space-y-2 text-sm text-zinc-700">
-                            <li>&bull; Example offer 1</li>
-                            <li>&bull; Example offer 2</li>
-                            <li>&bull; Example offer 3</li>
+                        <ul class="space-y-1.5 text-sm text-zinc-700">
+                            @foreach ($deals as $deal)
+                                <x-deal-card
+                                    :deal-url="$deal->deal_url"
+                                    :brand-color="$deal->merchant->brand_color ?? '#4f46e5'"
+                                    :logo-url="$deal->merchant->logo_url"
+                                    :merchant-name="$deal->merchant_name"
+                                    :title="$deal->title"
+                                    :description="$deal->description"
+                                    :link-whole-card="true" />
+                            @endforeach
+
                         </ul>
                     </div>
 
@@ -108,21 +152,17 @@
                 </aside>
 
                 {{-- Right column - scrollable content --}}
-                <section class="store-deals-column flex-1 space-y-4">
-                    <h2 class="font-bold text-2xl">Available Deals</h2>
-
-                    {{-- Deal cards --}}
-                    <div class="rounded-2xl border border-zinc-200 bg-white p-6">
-                        <p class="text-zinc-600">Deal 1 content here</p>
-                    </div>
-
-                    <div class="rounded-2xl border border-zinc-200 bg-white p-6">
-                        <p class="text-zinc-600">Deal 2 content here</p>
-                    </div>
-
-                    <div class="rounded-2xl border border-zinc-200 bg-white p-6">
-                        <p class="text-zinc-600">Deal 3 content here</p>
-                    </div>
+                <section class="store-deals-column no-strip-cards flex-1 space-y-3">
+                    @foreach ($deals as $deal)
+                                <x-deal-card
+                                    :deal-url="$deal->deal_url"
+                                    :brand-color="$deal->merchant->brand_color ?? '#4f46e5'"
+                                    :logo-url="$deal->merchant->logo_url"
+                                    :merchant-name="$deal->merchant_name"
+                                    :title="$deal->title"
+                                    :description="$deal->description"
+                                    :link-whole-card="true" />
+                            @endforeach
                 </section>
             </div>
         </div>

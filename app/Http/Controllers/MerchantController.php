@@ -20,6 +20,6 @@ class MerchantController extends Controller
         }
 
 
-        return view('stores.show', ['merchant'=> $merchant]);
+        return view('stores.show', ['merchant'=> $merchant, 'deals' => $merchant->deals()->get()]);
     }
 }

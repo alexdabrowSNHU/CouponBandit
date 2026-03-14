@@ -134,23 +134,34 @@
          <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-4">
             This is a dummy site strictly for demoing purposes.
          </div>
+          <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-1">
+            Some features are not functional.
+         </div>
         <section id="devLogPanel" class="mx-auto mt-4 hidden w-full max-w-4xl overflow-hidden rounded-2xl border border-zinc-300 bg-white/80 shadow-sm" hidden>
             <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3 sm:px-6">
                 <h2 class="text-sm font-semibold tracking-wide text-zinc-900">Development Log</h2>
             </div>
             <div class="px-4 py-4 sm:px-6">
                 <ul class="space-y-3 text-sm text-zinc-700">
-                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span>Added 419 redirect flow to login page for expired sessions.</span>
-                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span class="min-w-0 flex-1">Added 419 redirect flow to login page for expired sessions.</span>
+                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
                     </li>
-                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span>Removed hardcoded password defaults from compose config.</span>
-                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span class="min-w-0 flex-1">Removed hardcoded password defaults from compose config.</span>
+                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
                     </li>
-                    <li class="flex flex-wrap items-start justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span>Added "My Rewards" page.</span>
-                        <span class="text-xs text-zinc-500">2026-03-11</span>
+                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span class="min-w-0 flex-1">Added "My Rewards" page.</span>
+                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
+                    </li>
+                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span class="min-w-0 flex-1">Added optimistic rendering for favorite icon via Ajax POST, rollback on failure. Deal cards have been rewritten into a reuseable component.</span>
+                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-12-2026</span>
+                    </li>
+                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                        <span class="min-w-0 flex-1">Working on the deals page for a specific merchant (/stores/{merchant_id}). Running migration to index the merchant id in the deals table to avoid full table scans.</span>
+                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-13-2026</span>
                     </li>
                 </ul>
             </div>

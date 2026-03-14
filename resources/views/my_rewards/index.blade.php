@@ -14,6 +14,9 @@
                     :title="$favorite->title"
                     :description="$favorite->description"
                     :link-whole-card="true"
+                    :show-favorite="true"
+                    :favorite-route="route('favorites.toggle', $favorite->id)"
+                    :is-favorited="true"
                 />
             @endforeach
         </div>
