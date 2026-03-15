@@ -20,10 +20,13 @@ services:
       DB_DATABASE: ${DB_DATABASE_DOCKER:-couponbandit}
       DB_USERNAME: ${DB_USERNAME_DOCKER:-app}
       DB_PASSWORD: ${DB_PASSWORD}
+      KAFKA_BROKERS: kafka:9092
     expose:
       - "9000"
     depends_on:
       db:
+        condition: service_healthy
+      kafka:
         condition: service_healthy
 
   web:
@@ -58,6 +61,42 @@ services:
     command: sh -lc "npm ci && npm run dev:docker"
     profiles: ["dev"]
 
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: couponbandit-kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CLUSTER_ID: couponbandit-kafka-cluster-01
+    ports:
+      - "9092:9092"
+    volumes:
+      - couponbandit_kafka:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24-alpine
+    container_name: couponbandit-clickhouse
+    ports:
+      - "8123:8123"
+      - "9001:9000"
+    volumes:
+      - couponbandit_clickhouse:/var/lib/clickhouse
+      - ./docker/clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    depends_on:
+      kafka:
+        condition: service_healthy
+
   db:
     image: postgres:16
     container_name: couponbandit-db
@@ -78,3 +117,5 @@ services:
 volumes:
   couponbandit_pgdata:
   couponbandit_vendor:
+  couponbandit_kafka:
+  couponbandit_clickhouse:

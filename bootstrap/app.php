@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // 2. Ensure cookies work on both Local (HTTP) and Live (HTTPS)
         // This prevents "Secure" cookie errors on your local dev environment.
         $middleware->statefulApi();
+
+        $middleware->validateCsrfTokens(except: [
+            'api/track/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (TokenMismatchException $e, Request $request) {

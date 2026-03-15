@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Deal;
 use Illuminate\Http\Request;
+use Junges\Kafka\Facades\Kafka;
+use Laravel\Prompts\Key;
 
 class CouponBanditController extends Controller
 {
@@ -17,6 +19,8 @@ class CouponBanditController extends Controller
         $dealsQuery = Deal::query()
             ->with('merchant')
             ->where('is_active', true);
+        
+        
 
         if ($search !== '') {
             $words = array_values(array_filter(preg_split('/\s+/', $search)));
@@ -34,6 +38,16 @@ class CouponBanditController extends Controller
                         });
                 });
             }
+        }
+
+        if ($search != ''){
+            Kafka::publish()
+            ->onTopic('search_events')
+            ->withBodyKey('query', $search)
+            ->withBodyKey('user_id', auth()->id())
+            ->withBodyKey('results', $dealsQuery->count())
+            ->withBodyKey('searched_at', now()->toDateTimeString())
+            ->send();
         }
 
         $deals = $dealsQuery

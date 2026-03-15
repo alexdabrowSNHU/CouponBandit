@@ -2,7 +2,15 @@ FROM php:8.4-fpm-alpine
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache --virtual .build-deps \
+    autoconf \
+    gcc \
+    g++ \
+    make \
+    oniguruma-dev \
     postgresql-dev \
+    librdkafka-dev \
+    && pecl install rdkafka \
+    && docker-php-ext-enable rdkafka \
     && docker-php-ext-install mbstring pdo pdo_pgsql opcache \
     && apk del --no-cache .build-deps \
     && apk add --no-cache \
@@ -10,7 +18,9 @@ RUN apk upgrade --no-cache \
     curl \
     git \
     unzip \
-    libpq
+    libpq \
+    librdkafka \
+    oniguruma
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

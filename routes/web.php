@@ -6,6 +6,7 @@ use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MyRewardsController;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login.attempt');
     Route::post('/login/demo', [LoginController::class, 'demoLogin'])->name('login.demo');
 });
+
+Route::post('/api/track/navigation', [TrackingController::class, 'page_naviation_event']);
 
 // *** Logged in users ***
 // *** 'auth' middleware profile ***
