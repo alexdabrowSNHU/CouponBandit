@@ -78,7 +78,7 @@
         }
     </style>
     <div class="pt-12 pb-10">
-        <div class="container mx-auto max-w-screen-xl px-4 lg:px-0">
+        <div class="container mx-auto max-w-7xl px-4 lg:px-0">
             {{-- White banner with overlapping logo --}}
             <div class="relative">
                 <div class="absolute store-hero-logo">
@@ -118,7 +118,7 @@
             {{-- Main content - flex instead of grid --}}
             <div class="store-main-content-spacing store-main-content-layout flex gap-6 items-start">
                 {{-- Left column - sticky sidebar --}}
-                <aside class="store-main-sidebar no-strip-cards space-y-6 flex-shrink-0">
+                <aside class="store-main-sidebar no-strip-cards space-y-6 shrink-0">
                     <div class="rounded-2xl border border-zinc-200 bg-white p-5">
                         <h2 class="font-bold text-lg mb-4">Today's Top {{ $merchant->name }} Offers:</h2>
                         <ul class="space-y-1.5 text-sm text-zinc-700">

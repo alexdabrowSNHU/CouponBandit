@@ -1,14 +1,16 @@
 FROM php:8.4-fpm-alpine
 
-RUN apk add --no-cache \
+RUN apk upgrade --no-cache \
+    && apk add --no-cache --virtual .build-deps \
+    postgresql-dev \
+    && docker-php-ext-install mbstring pdo pdo_pgsql opcache \
+    && apk del --no-cache .build-deps \
+    && apk add --no-cache \
     bash \
     curl \
     git \
     unzip \
-    libzip-dev \
-    oniguruma-dev \
-    postgresql-dev \
-    && docker-php-ext-install pdo pdo_pgsql opcache
+    libpq
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
