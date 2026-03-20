@@ -32,6 +32,12 @@
             <!-- Desktop Right -->
             <div class="hidden md:flex items-center gap-4">
                 @auth
+                    <button
+                        type="button"
+                        class="traffic-log-trigger text-sm font-medium text-zinc-600 transition hover:text-zinc-900"
+                    >
+                        Traffic Log
+                    </button>
                     <span class="text-sm text-zinc-600">
                         {{ auth()->user()->name }}
                     </span>
@@ -71,6 +77,12 @@
                 <div class="pt-4 border-t border-zinc-200 space-y-5">
                     @auth
                         <span class="block text-zinc-600">{{ auth()->user()->name }}</span>
+                        <button
+                            type="button"
+                            class="traffic-log-trigger block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-left text-zinc-700 transition hover:bg-zinc-50"
+                        >
+                            Traffic Log
+                        </button>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit"
@@ -92,6 +104,48 @@
     <main class="flex-1">
         {{ $slot }}
     </main>
+
+    @auth
+        <div id="trafficLogModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4">
+            <div class="flex max-h-[80vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-zinc-300 bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-zinc-900">Traffic Log</h2>
+                        <p class="text-sm text-zinc-500">50 most recent page navigation events from ClickHouse.</p>
+                    </div>
+                    <button
+                        type="button"
+                        id="trafficLogCloseBtn"
+                        class="rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50"
+                    >
+                        Close
+                    </button>
+                </div>
+
+                <div class="overflow-auto px-5 py-4">
+                    <div id="trafficLogStatus" class="hidden rounded-lg border px-3 py-2 text-sm"></div>
+
+                    <div class="mt-4 overflow-hidden rounded-xl border border-zinc-200">
+                        <table class="min-w-full divide-y divide-zinc-200 text-left text-sm">
+                            <thead class="bg-zinc-50 text-zinc-600">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium">Time</th>
+                                    <th class="px-4 py-3 font-medium">User</th>
+                                    <th class="px-4 py-3 font-medium">From</th>
+                                    <th class="px-4 py-3 font-medium">To</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trafficLogTableBody" class="divide-y divide-zinc-200 bg-white">
+                                <tr>
+                                    <td colspan="4" class="px-4 py-6 text-center text-zinc-500">Open Traffic Log to load events.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endauth
 
 
     <!-- Footer -->

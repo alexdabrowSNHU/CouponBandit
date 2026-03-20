@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\CouponBanditController;
 use App\Http\Controllers\DealsController;
+use App\Http\Controllers\KafkaStreamController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MyRewardsController;
 use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\TrafficLogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DevLogController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +24,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/api/track/navigation', [TrackingController::class, 'page_naviation_event']);
+Route::post('/api/devlog', [DevLogController::class, 'store'])->middleware('throttle:devlog')->name('devlog.store');
+Route::get('/api/events/stream', KafkaStreamController::class)->name('events.stream');
 
 // *** Logged in users ***
 // *** 'auth' middleware profile ***
@@ -57,6 +62,7 @@ Route::middleware('auth')->group(function () {
     //
     // "My Rewards" tab on main navbar 
     Route::post( '/favorites/toggle/{deal_id}', [UserController::class, 'toggleFavorite'])->name('favorites.toggle');
+    Route::get('/api/traffic-log', [TrafficLogController::class, 'index'])->name('traffic-log.index');
     
 
 

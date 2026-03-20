@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DevLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,8 +15,10 @@ class LoginController extends Controller {
             return redirect()->route('home');
         }
 
+        $devLogs = DevLog::orderBy('log_date', 'desc')->orderBy('id', 'desc')->get();
+
         return response()
-            ->view('login.login_page')
+            ->view('login.login_page', ['devLogs' => $devLogs])
             ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
             ->header('Pragma', 'no-cache');
     }

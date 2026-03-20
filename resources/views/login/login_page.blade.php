@@ -5,6 +5,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Log into CouponBandit' }}</title>
     <style>
         .login-bg {
@@ -46,22 +47,9 @@
                         <span class="block text-zinc-600">Log in and pick up where you left off.</span>
                     </p>
                     <div class="flex-1"></div>
-                    <div class="flex flex-col justify-end">
-                        <p class="max-w-sm text-base text-zinc-700">
-                            Built with Laravel.
-                        </p>
-                        <button
-                            type="button"
-                            id="devLogToggle"
-                            aria-controls="devLogPanel"
-                            aria-expanded="false"
-                            class="mt-2 inline-flex items-center gap-1 whitespace-nowrap text-xs font-medium text-zinc-500 transition hover:text-zinc-700 focus:outline-none focus-visible:text-zinc-800 focus-visible:underline">
-                            <span id="devLogToggleLabel" class="whitespace-nowrap">Show dev log</span>
-                            <svg id="devLogChevron" class="h-3 w-3 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.51a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
+                    <p class="max-w-sm text-base text-zinc-700">
+                        Built with Laravel.
+                    </p>
                 </div>
             </section>
 
@@ -131,65 +119,94 @@
             </section>
         </div>
 
-         <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-4">
+        <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-4">
             This is a dummy site strictly for demoing purposes.
-         </div>
-          <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-1">
+        </div>
+        <div class="mx-auto grid w-full max-w-xl overflow-hidden rounded-3xl text-zinc-700 text-center px-4 mt-1">
             Some features are not functional.
-         </div>
-        <section id="devLogPanel" class="mx-auto mt-4 hidden w-full max-w-4xl overflow-hidden rounded-2xl border border-zinc-300 bg-white/80 shadow-sm" hidden>
+        </div>
+
+        <section class="mx-auto mt-4 w-full max-w-4xl overflow-hidden rounded-2xl border border-zinc-300 bg-white/80 shadow-sm">
             <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3 sm:px-6">
                 <h2 class="text-sm font-semibold tracking-wide text-zinc-900">Development Log</h2>
+                <button
+                    type="button"
+                    id="devLogAddBtn"
+                    class="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-300 bg-white text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-700"
+                    title="Add dev log entry">
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                    </svg>
+                </button>
             </div>
             <div class="px-4 py-4 sm:px-6">
-                <ul class="space-y-3 text-sm text-zinc-700">
-                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span class="min-w-0 flex-1">Added 419 redirect flow to login page for expired sessions.</span>
-                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
-                    </li>
-                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span class="min-w-0 flex-1">Removed hardcoded password defaults from compose config.</span>
-                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
-                    </li>
-                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span class="min-w-0 flex-1">Added "My Rewards" page.</span>
-                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-11-2026</span>
-                    </li>
-                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span class="min-w-0 flex-1">Added optimistic rendering for favorite icon via Ajax POST, rollback on failure. Deal cards have been rewritten into a reuseable component.</span>
-                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-12-2026</span>
-                    </li>
-                    <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                        <span class="min-w-0 flex-1">Working on the deals page for a specific merchant (/stores/{merchant_id}). Running migration to index the merchant id in the deals table to avoid full table scans.</span>
-                        <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">March-13-2026</span>
-                    </li>
+                <ul id="devLogList" class="space-y-3 text-sm text-zinc-700">
+                    @forelse ($devLogs as $log)
+                        <li class="flex items-baseline justify-between gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                            <span class="min-w-0 flex-1">{{ $log->message }}</span>
+                            <span class="shrink-0 whitespace-nowrap text-right text-xs text-zinc-500">{{ $log->log_date->format('d-m-Y') }}</span>
+                        </li>
+                    @empty
+                        <li class="text-zinc-400 text-center py-2">No log entries yet.</li>
+                    @endforelse
                 </ul>
+            </div>
+        </section>
+
+        <section class="mx-auto mt-3 hidden w-full max-w-4xl overflow-hidden rounded-2xl border border-[#d7c7b2] bg-[#f4ede2] text-zinc-800 shadow-sm">
+            <div class="flex items-center justify-between border-b border-[#e3d7c7] px-4 py-3 sm:px-6">
+                <div class="flex items-center gap-3">
+                    <span id="kafkaStreamStatusDot" class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+                    <h2 class="text-sm font-semibold tracking-wide">Live Kafka Stream</h2>
+                </div>
+                <span id="kafkaStreamStatusText" class="text-xs uppercase tracking-[0.18em] text-zinc-500"></span>
+            </div>
+            <div class="px-4 py-4 sm:px-6">
+                <div id="kafkaStreamBar" class="flex max-h-64 min-h-20 flex-col gap-2 overflow-y-auto rounded-xl border border-[#e3d7c7] bg-[#fbf7f1] px-3 py-3 text-sm shadow-inner">
+                    <span data-kafka-empty class="text-zinc-500">Waiting for Kafka messages...</span>
+                </div>
             </div>
         </section>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var toggle = document.getElementById('devLogToggle');
-            var panel = document.getElementById('devLogPanel');
-            var label = document.getElementById('devLogToggleLabel');
-            var chevron = document.getElementById('devLogChevron');
+    <!-- Dev Log Add Modal -->
+    <div id="devLogModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+        <div class="w-full max-w-sm rounded-2xl border border-zinc-300 bg-white p-6 shadow-xl">
+            <h3 class="text-lg font-semibold text-zinc-900">Add Dev Log Entry</h3>
 
-            if (!toggle || !panel || !label || !chevron) {
-                return;
-            }
+            <div id="devLogModalError" class="mt-3 hidden rounded-lg border border-red-300 bg-red-50 p-2 text-sm text-red-700"></div>
 
-            toggle.addEventListener('click', function () {
-                var expanded = toggle.getAttribute('aria-expanded') === 'true';
-                var nextExpanded = !expanded;
+            <form id="devLogForm" class="mt-4 space-y-4">
+                <div>
+                    <label for="devlog-username" class="mb-1 block text-sm font-medium text-zinc-700">Username</label>
+                    <input id="devlog-username" type="text" autocomplete="off"
+                        class="block w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-zinc-900"
+                        placeholder="Username">
+                </div>
+                <div>
+                    <label for="devlog-password" class="mb-1 block text-sm font-medium text-zinc-700">Password</label>
+                    <input id="devlog-password" type="password" autocomplete="off"
+                        class="block w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-zinc-900"
+                        placeholder="Password">
+                </div>
+                <div>
+                    <label for="devlog-message" class="mb-1 block text-sm font-medium text-zinc-700">Log message</label>
+                    <textarea id="devlog-message" rows="3"
+                        class="block w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 outline-none transition focus:border-zinc-900"></textarea>
+                </div>
+                <div class="flex items-center gap-3 pt-1">
+                    <button type="submit" id="devLogSubmitBtn"
+                        class="rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800">
+                        Add Entry
+                    </button>
+                    <button type="button" id="devLogCancelBtn"
+                        class="rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                toggle.setAttribute('aria-expanded', String(nextExpanded));
-                panel.hidden = !nextExpanded;
-                panel.classList.toggle('hidden', !nextExpanded);
-                label.textContent = nextExpanded ? 'Hide dev log' : 'Show dev log';
-                chevron.classList.toggle('rotate-180', nextExpanded);
-            });
-        });
-    </script>
 </body>
 </html>

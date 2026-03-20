@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'clickhouse' => [
+        'url' => env('CLICKHOUSE_URL', 'http://clickhouse:8123'),
+        'username' => env('CLICKHOUSE_USERNAME', 'default'),
+        'password' => env('CLICKHOUSE_PASSWORD', ''),
+    ],
+
 ];
